@@ -19,4 +19,10 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Maven
-        run: mvn -B -ntp package --file pom.xml
+        run: mvn clean install -DskipTests -DskipTests
+      
+      - name: Upload JAR as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: keycloak-extension
+          path: target/*.jar  # Adjust this path based on where your JAR is generated

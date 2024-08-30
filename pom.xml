@@ -8,7 +8,7 @@
 
     <artifactId>keycloak-event-listener-slack</artifactId>
     <groupId>io.github.kilmajster</groupId>
-    <version>SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <packaging>jar</packaging>
 
@@ -58,13 +58,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
 
         <!-- dependencies versions -->
-        <keycloak.version>18.0.2</keycloak.version>
+        <keycloak.version>25.0.4</keycloak.version>
         <slack.version>1.25.1</slack.version>
-        <lombok.version>1.18.24</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
         <commons-collections.version>4.4</commons-collections.version>
 
         <!-- test dependencies versions -->
@@ -81,13 +80,39 @@
         <!-- plugins versions -->
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
-        <maven-shade-plugin.version>3.4.0</maven-shade-plugin.version>
+        <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version> <!-- or the latest version -->
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.19.4</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>3.0.0</version> <!-- or the version you're using -->
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>6.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-core</artifactId>
@@ -231,6 +256,15 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version> <!-- Make sure to use the latest compatible version -->
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>${maven-shade-plugin.version}</version>
                 <executions>
@@ -247,6 +281,7 @@
                     <artifactSet>
                         <includes>
                             <include>org.apache.commons:commons-collections4</include>
+                            <include>org.apache.commons:commons-lang3</include>
                             <include>com.slack.api:slack-api-client</include>
                             <include>com.slack.api:slack-api-model</include>
                             <include>com.google.code.gson:gson</include>
@@ -255,6 +290,12 @@
                     <filters>
                         <filter>
                             <artifact>org.apache.commons:commons-collections4</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>org.apache.commons:commons-lang3</artifact> <!-- Filter for commons-lang3 -->
                             <excludes>
                                 <exclude>META-INF/MANIFEST.MF</exclude>
                             </excludes>
